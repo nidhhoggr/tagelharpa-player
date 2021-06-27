@@ -13,8 +13,8 @@
   display: inline-block;
   background-color: #fff;
   background-repeat: none;
+  background-image: url("../images/content/fretboard.png");
 }
-
 
 .scrollingNotesWrapper {
   overflow-y: hidden;
@@ -24,6 +24,17 @@
   text-align: left;
   line-break: unset;
   white-space: nowrap;
+}
+
+div.pnWrapper {
+  background-image: url("../images/content/fretboard-bg.png");
+  height: 160px;
+  background-repeat: repeat-x;
+  background-position-y: 1px;
+  display: inline-block;
+  width: fit-content;
+  background-color: #fff;
+  float: left;
 }
 
 /*
@@ -166,7 +177,6 @@ main.mobile {
 
 .scrolling_notes-playable_tuning-gcg {
   @mixin playable-note {
-    background-image: url("../images/content/fretboard.png");
     @include pn;
   }
 

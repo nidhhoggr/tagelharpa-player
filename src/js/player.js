@@ -18,7 +18,8 @@ const {
   dQ,
   dQAll,
   timeoutElOp,
-  parseYTVideoId
+  parseYTVideoId,
+  htmlToElement
 } = utils({from: "player"});
 
 function ABCPlayer({
@@ -1193,8 +1194,40 @@ ABCPlayer.prototype.settingTuneStart = function settingTuneStart(tuneIndex) {
 
 ABCPlayer.prototype.settingTuneFinish = function settingTuneFinish() {
   this.isSettingTuneByIndex = undefined;
+  this.enableDurationalMargins();
+  /**TODO use as a toggle
+    setTimeout(() => {
+      this.disableDurationalMargins();
+    }, 10000);
+  */
   fadeEffect();
 }
+
+ABCPlayer.prototype.enableDurationalMargins = function enableDurationalMargins() {
+  const sections = dQAll(".scrollingNotesWrapper section");
+  sections.forEach(s => {
+    let duration = s.getAttribute("data-duration");
+    if (duration) {
+      duration = parseFloat(duration);
+      const pixels = _.round(duration * 130);
+      s.style["margin-right"] = `${pixels}px`;
+      s.outerHTML = `<div class="pnWrapper">${s.outerHTML}</div>`;
+    }
+  });
+}
+
+ABCPlayer.prototype.disableDurationalMargins = function disableDurationalMargins() {
+  const wrappers = dQAll("div.pnWrapper");
+  wrappers.forEach(w => {
+    const s = w.querySelector("section");
+    const duration = s.getAttribute("data-duration");
+    if (duration) {
+      s.style["margin-right"] = `0px`;
+      w.outerHTML = s.outerHTML;
+    }
+  });
+}
+
 
 ABCPlayer.prototype.isSettingTune = function isSettingTune() {
   return this.currentTuneIndex && this.isSettingTuneByIndex === this.currentTuneIndex;
