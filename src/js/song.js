@@ -320,7 +320,8 @@ ABCSong.prototype.setTransposition = function(semitones, cb) {
       }
       else {//transpoisition doesnt exist so we simply add it
         debug(`Transposition doesnt exist so well add it to ${line}`);
-        this.abc = this.abc.replace(line, `${line} ${stringReplacement}`);
+        const stripped  = line.replace(/(\r\n|\n|\r)/gm, "");
+        this.abc = this.abc.replace(line, `${stripped} ${stringReplacement}`);
         isSet = true;
       }
     }

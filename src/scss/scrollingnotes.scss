@@ -2,24 +2,24 @@
   background-image: none;
   background-color: red;
   width: 48px;
-  height: 150px;
+  height: 120px;
 }
 
 @mixin pn {
   color: #000;
-  max-height: 200px;
-  min-height: 150px;
+  max-height: 120px;
+  min-height: 120px;
   width: 48px;
   display: inline-block;
-  background-size: auto 100%;
   background-color: #fff;
+  background-repeat: none;
 }
 
 
 .scrollingNotesWrapper {
   overflow-y: hidden;
-  max-height: 200px;
-  height: 170px;
+  max-height: 150px;
+  height: 150px;
   padding-top: 10px;
   text-align: left;
   line-break: unset;
@@ -77,7 +77,7 @@ section.incompatible_pitch {
   background-position-y: 29px;
   background-size: auto 123%;
   position: relative;
-  top: 103px;
+  top: 85px;
   border-radius: 12px;
 }
 
@@ -164,18 +164,11 @@ main.mobile {
   }
 }
 
-.scrolling_notes-playable_tuning-ea {
+.scrolling_notes-playable_tuning-gcg {
   @mixin playable-note {
-    background-image: url("../images/content/onescalloped.png");
+    background-image: url("../images/content/fretboard.png");
     @include pn;
   }
-
-  @mixin playable-note-alt {
-    background-image: url("../images/content/onescalloped-alt.png");
-    opacity: 0.7;
-    @include pn;
-  }
-
 
   background-image: none;
   background-repeat: no-repeat;
@@ -185,7 +178,7 @@ main.mobile {
   section {
     margin: 0px 5px 0px 5px;
     &.firstScrollingNote {
-      height: 150px;
+      height: 100px;
       width: 400px;//may be overridden by directive above
       background-color: #3e3e3e;
     }
@@ -195,82 +188,113 @@ main.mobile {
     border-right: 5px solid #fbc500;
     width: 57px !important;
   }
-  //D, [Eb], E, [F], Gb, G, Ab, A, [Bb], B, C, Db, D, [Eb], E
-  //62 63    64 65   66  67 68  69  70   71 72 73  74 75    76
-  //#["D", "E", "F#", "G", "Ab", "A", "B", "C", "Db"]
+
+  // 0 |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 |
+  // 55   56    57    58    59    60↩
+  // 60   61    62    63    64    65    66    67↩
+  // 68   69    70    71    72    73    74    75    76    77    78    79    80
+  .playable_pitch-55 {
+    @include playable-note;
+    background-position: 0px 0px;
+  }
+  .playable_pitch-56 {
+    @include playable-note;
+    background-position: -46px 0px;
+  }
+  .playable_pitch-57 {
+    @include playable-note;
+    background-position: -94px 0px;
+  }
+  .playable_pitch-58 {
+    @include playable-note;
+    background-position: -140px 0px;
+  }
+  .playable_pitch-59 {
+    @include playable-note;
+    background-position: -186px 0px;
+  }
+  .playable_pitch-60 {
+    @include playable-note;
+    background-position: -231px 0px;
+  }
+  .playable_pitch-61 {
+    @include playable-note;
+    background-position: -350px 0px;
+  }
   .playable_pitch-62 {
     @include playable-note;
-    background-position: 3px 0px;
+    background-position: -395px 0px;
+  }
+  .playable_pitch-63 {
+    @include playable-note;
+    background-position: -442px 0px;
   }
   .playable_pitch-64 {
     @include playable-note;
-    //background-position: -154px 0px;
-    background-position: -38px 0px;
+    background-position: -485px 0px;
+  }
+  .playable_pitch-65 {
+    @include playable-note;
+    background-position: -534px 0px;
   }
   .playable_pitch-66 {
     @include playable-note;
-    background-position: -81px 0px;
+    background-position: -605px 0px;
   }
   .playable_pitch-67 {
     @include playable-note;
-    background-position: -123px 0px;
+    background-position: -652px 0px;
   }
   .playable_pitch-68 {
     @include playable-note;
-    background-position: -163px 0px;
+    background-position: -744px 0px;
   }
   .playable_pitch-69 {
     @include playable-note;
-    background-position: -204px 0px;
+    background-position: -790px 0px;
+  }
+  .playable_pitch-70 {
+    @include playable-note;
+    background-position: -836px 0px;
   }
   .playable_pitch-71 {
     @include playable-note;
-    background-position: -246px 0px;
+    background-position: -908px 0px;
   }
   .playable_pitch-72 {
     @include playable-note;
-    background-position: -288px 0px;
+    background-position: -954px 0px;
   }
   .playable_pitch-73 {
     @include playable-note;
-    background-position: -328px 0px;
+    background-position: -1000px 0px;
   }
   .playable_pitch-74 {
     @include playable-note;
-    background-position: -370px 0px;
-  }
-  .playable_pitch-76 {//E5
-    @include playable-note;
-    background-position: -410px 0px;
-  }
-
-  .unplayable_pitch-72 {
-    @include playable-note;
-    background-position: -288px 0px;
-    background-blend-mode: color-burn;
-  }
-  .unplayable_pitch-73 {
-    @include playable-note;
-    background-position: -328px 0px;
-    background-blend-mode: color-burn;
-  }
-
-  .playable_pitch-63 {
-    background-color: green;
-    @include playable-note-alt;
-    opacity: 0.7;
-    background-position: -38px 0px;
-  }
-  .playable_pitch-65 {
-    @include playable-note-alt;
-    background-position: -81px 0px;
-  }
-  .playable_pitch-70 {
-    @include playable-note-alt;
-    background-position: -246px 0px;
+    background-position: -1046px 0px;
   }
   .playable_pitch-75 {
-    @include playable-note-alt;
+    @include playable-note;
+    background-position: -1092px 0px;
+  }
+  .playable_pitch-76 {
+    @include playable-note;
+    background-position: -1138px 0px;
+  }
+  .playable_pitch-77 {
+    @include playable-note;
+    background-position: -1210px 0px;
+  }
+  .playable_pitch-78 {
+    @include playable-note;
+    background-position: -1256px 0px;
+  }
+  .playable_pitch-79 {
+    @include playable-note;
+    background-position: -1302px 0px;
+  }
+  .playable_pitch-80 {
+    @include playable-note;
     background-position: -410px 0px;
   }
 }

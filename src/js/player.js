@@ -299,7 +299,6 @@ ABCPlayer.prototype.editSong = function editSong() {
   else {
     _song = this.currentSong.abc;
   }
-
   dQ("textarea.createSongTextarea").value = _song; 
   this.ldCover.get().then((res) => {
     if (res === "add") {

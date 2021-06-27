@@ -43,20 +43,29 @@ Instrument.prototype.getPlayableNotes = function getPlayableNotes({tuningKey, no
   let pitches = [];
   switch (tuningKey) {
     case "gCG": {
-            // D    E    ^F    G    ^G    A    B    C'   ^C' 
-            // D'   E'
+            // 0 |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 | 
+            // G    Ab    A     Bb    B     C↩ 
+            // C    Db    D     Eb    E     F     Gb    G↩
+            // G    Ab    A     Bb    B     C     Db    D     Eb    E     F     Gb    G
+            
+            // 0 |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 | 
+            // 55   56    57    58    59    60↩ 
+            // 60   61    62    63    64    65    66    67↩
+            // 68   69    70    71    72    73    74    75    76    77    78    79    80
+
       notes = {
+        "G": [55,67,79],
+        "Ab": [56,68],
+        "A": [57,69],
+        "Bb": [58,70], 
+        "B": [59,71], 
+        "C": [60,72],
+        "Db": [61,73],
         "D": [62,74],
+        "Eb": [63,75],
         "E": [64,76],
-        "Gb": 66,
-        "G": 67, 
-        "Ab": 68, 
-        "A": 69,
-        "B": 71,
-        "C": 72,
-        "Db": 73,
-        //"D": 74,//Cannot have duplicate elements so we use the array above
-        //"E": 76
+        "F": [65,77],
+        "Gb": [66,78]
       };
       //E/A Chromaticism reached with the addition of Eb (63), F (65), Bb(70), and Eb (76)
       //D, [Eb], E, [F], Gb, G, Ab, A, [Bb], B, C, Db, D, [Eb], E
