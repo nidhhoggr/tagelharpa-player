@@ -1,0 +1,13 @@
+%%abc-charset utf-8
+X: 0
+T:Jag blåste i min pipa
+M:4/4
+K:Am fgp=1
+Q: "BPM=100"
+"E:7"E2 A3B A2 | ^G2 E4 E2 | z2 c4 B2 | c2 d6 | c2 B3c B2 | A2 ^G2 A2 B2 |
+A2 A3^G E2 | E2 c4 c2 | B2 B3A ^G2 | B2 d2 d2 c2 |: B2 A3^G E2 | E2 c4 B2 |
+zA ^G3B e2 | ^G2 A6 | A2 A3^G E2 | E2 c4 c2 | B2 B3A ^G2 | B2 d2 d2 c2 :|
+B2 A3^G E2 | E2 c4 B2 | zA ^G3B e2 | ^G2 A6 | B2 c2 cB c2 | cB c2 e2 e2 |
+zd B2 BA B2 | BA B2 d2 d2 | zc A3^G E2 | E2 c4 B2 | zA ^G3B e2 | ^G2 A6 |
+B2 c2 cB c2 | cB c2 e2 e2 | zd B2 BA B2 | BA B2 d2 d2 | zc A3^G E2 | E2 c4 B2 |
+zA ^G3B e2 | ^G2 A6 | z8 |

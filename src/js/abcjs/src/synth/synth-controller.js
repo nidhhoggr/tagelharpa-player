@@ -1,0 +1,321 @@
+//    Copyright (C) 2019-2020 Paul Rosen (paul at paulrosen dot net)
+//
+//    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+//    documentation files (the "Software"), to deal in the Software without restriction, including without limitation
+//    the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and
+//    to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+//    BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+//    DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+var CreateSynthControl = require('./create-synth-control');
+var CreateSynth = require('./create-synth');
+var TimingCallbacks = require('../api/abc_timing_callbacks');
+var activeAudioContext = require('./active-audio-context');
+
+function SynthController() {
+	var self = this;
+	self.warp = 100;
+	self.cursorControl = null;
+	self.visualObj = null;
+	self.timer = null;
+	self.midiBuffer = null;
+	self.options = null;
+	self.currentTempo = null;
+	self.control = null;
+	self.isLooping = false;
+	self.isStarted = false;
+	self.isLoaded = false;
+
+	self.load = function (selector, cursorControl, visualOptions) {
+		if (!visualOptions)
+			visualOptions = {};
+		self.control = new CreateSynthControl(selector, {
+			loopHandler: visualOptions.displayLoop ? self.toggleLoop : undefined,
+			restartHandler: visualOptions.displayRestart ? self.restart : undefined,
+			playPromiseHandler: visualOptions.displayPlay ? self.play : undefined,
+			progressHandler: visualOptions.displayProgress ? self.randomAccess : undefined,
+			warpHandler: visualOptions.displayWarp ? self.onWarp : undefined,
+			afterResume: self.init
+		});
+		self.cursorControl = cursorControl;
+	};
+
+	self.setTune = function(visualObj, userAction, audioParams) {
+		self.isLoaded = false;
+		self.visualObj = visualObj;
+		if(audioParams) {
+      self.options = {
+        ...self.options,
+        ...audioParams
+      };
+    }
+
+		if (self.control) {
+			self.pause();
+			self.setProgress(0, 1);
+			self.control.resetAll();
+			self.restart();
+			self.isStarted = false;
+		}
+		self.isLooping = false;
+
+		if (userAction)
+			return self.go(true);
+		else {
+			return Promise.resolve({status: "no-audio-context"});
+		}
+	};
+
+	self.go = function(noResume = false) {
+		if (!self.visualObj) {
+      /**
+       * synth-controller.js:77 Uncaught TypeError: Cannot read property 'millisecondsPerMeasure' of null
+       * at SynthController.self.go (synth-controller.js:77)
+       * at SynthController.self.play (synth-controller.js:132)
+       * at doNext (create-synth-control.js:200)
+       * at acResumerMiddleWare (create-synth-control.js:194)
+       * at HTMLButtonElement.eval (create-synth-control.js:223)
+       */
+       return new Promise((resolve, reject) => reject(new Error("Attempted to load without visualObj set")));
+    }
+    var millisecondsPerMeasure = self.visualObj.millisecondsPerMeasure() * 100 / self.warp;
+		self.currentTempo = Math.round(self.visualObj.getBeatsPerMeasure() / millisecondsPerMeasure * 60000);
+		if (self.control)
+			self.control.setTempo(self.currentTempo);
+		self.percent = 0;
+		var loadingResponse;
+
+		if (!self.midiBuffer)
+			self.midiBuffer = new CreateSynth();
+		
+    let startPromise;
+
+    const initBuffer = () => {
+			return Promise.resolve(self.midiBuffer.init({
+				visualObj: self.visualObj,
+				options: self.options,
+				millisecondsPerMeasure: millisecondsPerMeasure
+			}));
+    }
+
+    if (noResume) {
+      startPromise = initBuffer();
+    }
+    else {
+      startPromise = activeAudioContext().resume().then(initBuffer);
+    }  
+
+		return startPromise.then(function (response) {
+			loadingResponse = response;
+      if (self.midiBuffer) return self.midiBuffer.prime();
+		}).then(function () {
+			var subdivisions = 16;
+			if (self.cursorControl &&
+				self.cursorControl.beatSubdivisions !== undefined &&
+				parseInt(self.cursorControl.beatSubdivisions, 10) >= 1 &&
+				parseInt(self.cursorControl.beatSubdivisions, 10) <= 64)
+				subdivisions = parseInt(self.cursorControl.beatSubdivisions, 10);
+
+			// Need to create the TimingCallbacks after priming the midi so that the midi data is available for the callbacks.
+			self.timer = new TimingCallbacks(self.visualObj, {
+				beatCallback: self.beatCallback,
+				eventCallback: self.eventCallback,
+				lineEndCallback: self.lineEndCallback,
+				qpm: self.currentTempo,
+
+				extraMeasuresAtBeginning: self.cursorControl ? self.cursorControl.extraMeasuresAtBeginning : undefined,
+				lineEndAnticipation: self.cursorControl ? self.cursorControl.lineEndAnticipation : undefined,
+				beatSubdivisions: subdivisions,
+			});
+			if (self.cursorControl && self.cursorControl.onReady && typeof self.cursorControl.onReady  === 'function')
+				self.cursorControl.onReady(self);
+			self.isLoaded = true;
+			return Promise.resolve({ status: "created", notesStatus: loadingResponse });
+		});
+	};
+
+	self.destroy = function () {
+		if (self.timer) {
+			self.timer.reset();
+			self.timer.stop();
+			self.timer = null;
+		}
+		if (self.midiBuffer) {
+			self.midiBuffer.stop();
+			self.midiBuffer = null;
+		}
+		self.setProgress(0, 1);
+		if (self.control)
+			self.control.resetAll();
+	};
+
+	self.play = function () {
+		if (!self.isLoaded) {
+			return self.go().then(function() {
+				return self._play();
+			}).catch((err) => {
+        console.error(err);
+        window.location.reload();
+      });
+		} else
+			return self._play();
+	};
+
+	self._play = function () {
+		return activeAudioContext().resume().then(function () {
+			self.isStarted = !self.isStarted;
+			if (self.isStarted) {
+				if (self.cursorControl && self.cursorControl.onStart && typeof self.cursorControl.onStart === 'function')
+					self.cursorControl.onStart();
+				self.midiBuffer.start();
+				self.timer.start();
+				if (self.control)
+					self.control.pushPlay(true);
+			} else {
+				self.pause();
+			}
+			return Promise.resolve({status: "ok"});
+		})
+	};
+
+	self.pause = function() {
+		if (self.timer) {
+			self.timer.pause();
+			self.midiBuffer && self.midiBuffer.pause();
+			if (self.control)
+				self.control.pushPlay(false);
+		}
+	};
+
+	self.toggleLoop = function () {
+		self.isLooping = !self.isLooping;
+		if (self.control)
+			self.control.pushLoop(self.isLooping);
+	};
+
+	self.restart = function () {
+		if (self.timer) {
+			self.timer.setProgress(0);
+			self.midiBuffer && self.midiBuffer.seek(0);
+		}
+	};
+
+	self.randomAccess = function (ev) {
+		if (!self.isLoaded) {
+			return self.go().then(function() {
+				return self._randomAccess(ev);
+			});
+		} else
+			return self._randomAccess(ev);
+	};
+
+  //notes
+  //1. calculate percentage for each note sequence by the total song length minus the duration and current reached 
+  //2. store each note percentage max and min bounds
+  //3. when the event is fired we get the percentage minbound from the event
+
+	self.randomAccessBy = function ({percent}) {
+		if (percent < 0)
+			percent = 0;
+		if (percent > 100)
+			percent = 100;
+		self.timer.setProgress(percent);
+		self.midiBuffer.seek(percent);
+	};
+
+	self._randomAccess = function (ev) {
+		var background = (ev.target.classList.contains('abcjs-midi-progress-indicator')) ? ev.target.parentNode : ev.target;
+		var percent = (ev.x - background.offsetLeft) / background.offsetWidth;
+    self.randomAccessBy({percent});
+	};
+
+	self.onWarp = function (ev) {
+		var newWarp = ev.target.value;
+		if (parseInt(newWarp, 10) > 0) {
+			self.warp = parseInt(newWarp, 10);
+			var wasPlaying = self.isStarted;
+			var startPercent = self.percent;
+			self.destroy();
+			self.isStarted = false;
+			self.go().then(function () {
+				self.setProgress(startPercent, self.midiBuffer.duration * 1000);
+				if (wasPlaying) {
+					self.play();
+				}
+				self.timer.setProgress(startPercent);
+				self.midiBuffer.seek(startPercent);
+			});
+		}
+	};
+
+	self.setProgress = function (percent, totalTime) {
+		self.percent = percent;
+		if (self.control)
+			self.control.setProgress(percent, totalTime);
+	};
+
+	self.finished = function () {
+		self.timer.reset();
+		if (self.isLooping) {
+			self.timer.start();
+			self.midiBuffer.finished();
+			self.midiBuffer.start();
+		} else {
+			self.timer.stop();
+			if (self.isStarted) {
+				if (self.control)
+					self.control.pushPlay(false);
+				self.isStarted = false;
+				self.midiBuffer.finished();
+				if (self.cursorControl && self.cursorControl.onFinished && typeof self.cursorControl.onFinished  === 'function')
+					self.cursorControl.onFinished();
+				self.setProgress(0, 1);
+			}
+		}
+	};
+
+	self.beatCallback = function (beatNumber, totalBeats, totalTime) {
+		var percent = beatNumber / totalBeats;
+		self.setProgress(percent, totalTime);
+		if (self.cursorControl && self.cursorControl.onBeat && typeof self.cursorControl.onBeat  === 'function')
+			self.cursorControl.onBeat(beatNumber, totalBeats, totalTime);
+	};
+
+	self.eventCallback = function (event) {
+		if (event) {
+			if (self.cursorControl && self.cursorControl.onEvent && typeof self.cursorControl.onEvent  === 'function')
+				self.cursorControl.onEvent(event);
+		} else {
+			self.finished();
+		}
+	};
+
+	self.lineEndCallback = function (data) {
+		if (self.cursorControl && self.cursorControl.onLineEnd && typeof self.cursorControl.onLineEnd  === 'function')
+			self.cursorControl.onLineEnd(data);
+	};
+
+	self.getUrl = function () {
+		return self.midiBuffer.download();
+	};
+
+	self.download = function(fileName) {
+		var url = self.getUrl();
+		var link = document.createElement('a');
+		document.body.appendChild(link);
+		link.setAttribute("style","display: none;");
+		link.href = url;
+		link.download = fileName ? fileName : 'output.wav';
+		link.click();
+		window.URL.revokeObjectURL(url);
+		document.body.removeChild(link);
+	};
+}
+
+module.exports = SynthController;

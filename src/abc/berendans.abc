@@ -1,0 +1,13 @@
+%%abc-charset utf-8
+X: 0
+T:Berendans
+O:Flemish
+M:2/4
+L:1/8
+Q:1/4=100
+K:Em fgp=1
+BE E/F/G/A/ | BE E>F | GG FG | AB/A/ GA |
+[1 BE E/F/G/A/ | BE E>F | GG F/E/D/F/ | E2 E2 :|
+[2 Be Be | BE E>F | GG F/E/D/F/ | E2 E>F ||
+|: GB A/G/F | GB A/G/F | d/A/F/A/ d_F | Ec B^d |
+eB GF | E/D/E/F/ G/A/B | c/B/A/G/ F/E/D/F/ |1 E2 E>F :|2 E2 E2 ||

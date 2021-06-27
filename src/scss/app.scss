@@ -1,0 +1,577 @@
+/* By Athlon Front-End Team */
+
+/* Core variables */
+@import 'base/vars';
+
+/* CSS Reset */
+@import 'base/reset';
+
+/* CSS print */
+@import 'base/print';
+
+/* Fonts */
+@import 'base/fonts';
+
+/* Mixins, helpers and functions */
+@import 'base/mixins';
+
+/* Vendor */
+
+/* Components */
+
+/* Browser specific styles */
+@import 'dirty/hacks';
+
+/* Demo styles */
+@import 'scrollingnotes';
+
+@mixin button-column { 
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  justify-content: space-evenly;
+}
+
+@mixin unplayable-note {
+  background-image: none;
+  color: red !important;
+}
+
+body {
+  background: $body-background-color;
+  color: $foreground-color;
+  font-family: 'DINP-R', arial, serif;
+}
+
+header {
+  font-size: 2em;
+  margin: 20px;
+  color: $caption-color;
+  text-align: center;
+  background: $foreground-color url('../images/design/heading.png') center 20px no-repeat;
+  padding: 60px 30px 30px;
+  background-size: 160px;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, .5);
+  box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+.preloader {
+  align-items: center;
+  background: rgb(23, 22, 22);
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  top: 0;
+  transition: opacity 0.3s linear;
+  width: 100%;
+  z-index: 9999;
+}
+
+main {
+  background: $body-foreground-color;
+  color: $foreground-color;
+  text-align: center;
+  padding: 10px;
+  max-width: 770px;
+  min-width: 420px;
+  margin: 0 auto;
+
+  &.pageView {
+    max-width: 2000px;
+    width: 80%;
+    min-width: 500px;
+    .scrollingNotesWrapper {
+      display: inline;
+      & > section {
+        margin: 5px;
+      }
+      .firstScrollingNote {
+        display: none;
+      }
+    }
+  }
+}
+
+a {
+  color: $link-color;
+}
+
+address {
+  color: $accent-color;
+}
+
+.feedback {
+  height: 600px;
+  font-family: Arial, "sans-serif";
+}
+.highlight {
+  fill: #0a9ecc;
+}
+.abcjs-cursor {
+  stroke: red;
+}
+.audio-error {
+  color: red;
+  border: 2px solid red;
+  padding: 10px;
+}
+.click-explanation {
+  color: red;
+  font-style: italic;
+}
+.beat {
+  font-weight: bold;
+  clear: both;
+}
+.label {
+  color: #888888;
+}
+
+.logo {
+  margin: 0 auto;
+  display: block;
+}
+
+.cleaner {
+  clear: both;
+}
+
+.removal-indicator {
+  color: red;
+  font-weight: bold;
+  font-size: 0px !important;
+  display: none;
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+  background: url("../images/content/delete.svg") no-repeat;
+}
+
+.abcjs-inline-audio {
+  display: none !important;
+}
+
+main.mobile {
+  .playercontrols {
+    margin: 0px;
+    padding: 0px;
+    justify-content: left;
+    position: relative;
+    left: -35px;
+  }
+}
+
+//hides the song selector before it loads
+select {
+  display: inline;;
+}
+.js-Dropdown {
+  padding-top: 5px;
+}
+
+.playercontrols {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  //background-color: #fff0f0;
+  margin: 0 0 10px;
+  padding: 15px;
+  max-width: 770px;
+  margin: 0px auto;
+
+  span.title {
+    color: #2a5b80;
+    font-size: 20px;
+    min-height: 33px;
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .buttons {
+    font-size: 32px;
+    color: #257aae;
+    span:hover {
+      color: #80cfff;
+    }
+    span:active {
+      color: #57cff4;
+    }
+    cursor: pointer;
+  }
+
+  .songControls {
+    min-width: 200px;      
+    .buttons {}
+    span.currentBeat {
+      display: block;
+      text-align: left;
+    }
+    span.currentSong {
+      padding-top: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      display: inline-block;
+    }
+  }
+  .controls {
+    display: flex;
+    justify-content: space-evenly;
+
+
+    span.songPrev,
+    span.stop,
+    span.start,
+    span.songNext {
+      font-size: 0px !important;
+      width: 40px;
+      height: 40px;
+      display: inline-block;
+      border-radius: 50%;
+      box-shadow: 0 0 1rem rgba(0,0,0,0.6);
+      &:hover {
+        box-shadow: none;
+      }
+    }
+
+    span.songPrev {
+      background: url("../images/content/player/next.svg") no-repeat;
+      &:hover {
+        background-image: url("../images/content/player/next-active.svg");
+      }
+      transform: scaleX(-1);
+      @include shadowed;
+    }
+    span.songNext {
+      background: url("../images/content/player/next.svg") no-repeat;
+      &:hover {
+        background-image: url("../images/content/player/next-active.svg");
+      }
+    }
+    span.stop {
+      background: url("../images/content/player/stop.svg") no-repeat;
+      &:hover {
+        background-image: url("../images/content/player/stop-active.svg");
+      }
+    }
+    span.start {
+      background: url("../images/content/player/play.svg") no-repeat;
+      &:hover {
+        background-image: url("../images/content/player/play-active.svg");
+      }
+    }
+
+    span.enableRepeatingSegments,
+    span.disableRepeatingSegments,
+    span.enableMobileView,
+    span.disableMobileView,
+    span.enableFullscreen,
+    span.disableFullscreen,
+    span.enablePageView,
+    span.disablePageView,
+    span.compatibility,
+    span.editSong,
+    span.createSong {
+      font-size: 0px !important;
+      padding: 2px;
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      border-radius: 25%;
+      box-shadow: 0 0 1rem rgba(0,0,0,0.6);
+      &:hover {
+        box-shadow: none;
+      }
+    }
+
+    span.enableRepeatingSegments {
+      background: url("../images/content/player/enableRepeatingSegments.svg") no-repeat;
+      display: none;
+    }
+    span.disableRepeatingSegments {
+      background: url("../images/content/player/disableRepeatingSegments.svg") no-repeat;
+    }
+    span.enableMobileView {
+      background: url("../images/content/player/mobile.svg") no-repeat;
+      display: none;
+    }
+    span.disableMobileView {
+      background: url("../images/content/player/desktop.svg") no-repeat;
+      display: none;
+    }
+    span.enableFullscreen {
+      background: url("../images/content/player/expandScreen.svg") no-repeat;
+    }
+    span.disableFullscreen {
+      background: url("../images/content/player/collapseScreen.svg") no-repeat;
+      display: none;
+    }
+    span.enablePageView {
+      background: url("../images/content/player/longMode.svg") no-repeat;  
+    }
+    span.disablePageView {
+      background: url("../images/content/player/wideMode.svg") no-repeat;
+      display: none;
+    }
+    span.compatibility {
+      background: url("../images/content/player/exclamation.svg") no-repeat;
+    }
+    span.createSong {
+      background: url("../images/content/player/add.svg") no-repeat;
+    }
+    span.editSong {
+      background: url("../images/content/player/edit.svg") no-repeat;
+    }
+  }
+
+  .transposition {
+    span.currentTransposition {
+      font-size: 64px;
+      text-align: right;
+    }
+    .buttons {
+      @include button-column;
+    }
+  }
+
+  .tempo {
+    span.currentTempo {
+      font-size: 64px;
+      text-align: right;
+    }
+    .buttons {
+      @include button-column;
+    }
+  }
+
+  .tuningControls {
+    span.currentTuning {
+      font-size: 64px;
+      text-align: right;
+    }
+    .buttons {
+      @include button-column;
+    }
+  }
+
+  .keySigControls {
+    span.currentKeySig {
+      font-size: 45px;
+      text-align: right;
+      padding-top: 10px;
+    }
+    .buttons {
+      color: rgba(0,0,0, 0.3);
+      span:hover {
+        color: rgba(0,0,0, 0.3);
+      }
+    }
+  }
+
+}
+
+.playernotes {
+
+  display: flex;
+  justify-content: space-evenly;
+
+  .playercontainer {
+    background-color: #ebefff;
+    min-height: 600px;
+    min-width: 75%;
+    padding: 15px;
+  }
+
+  .noteDiagram {
+    text-align: left;
+    background-color: #fff1eb;
+    padding: 15px;
+    h1 {
+      text-align: center;
+      font-size: 64px;
+    }
+  }
+}
+
+.metaData {
+  clear: both;
+  text-align: left;
+}
+
+
+.unplayable-note {
+  @include unplayable-note;
+}
+
+span.transposeDown,
+span.tempoDown,
+span.tuningDown,
+span.keySigDown,
+span.transposeUp,
+span.tempoUp,
+span.tuningUp,
+span.keySigUp {
+  width: 32px;
+  height: 38px;
+  font-size: 0 !important;
+}
+
+span.transposeDown,
+span.tempoDown,
+span.tuningDown,
+span.keySigDown {
+  background: url("../images/content/up-arrow.svg") no-repeat;
+  &:hover {
+    background-image: url("../images/content/up-arrow-active.svg");
+  }
+  transform: scaleY(-1);
+}
+
+span.transposeUp,
+span.tempoUp,
+span.tuningUp,
+span.keySigUp {
+  background: url("../images/content/up-arrow.svg") no-repeat;
+  &:hover {
+    background-image: url("../images/content/up-arrow-active.svg");
+  }
+}
+
+.playable_tuning-gCG {
+  @mixin playable-note {
+    background-image: url("../images/content/onescalloped.png");
+    color: #000;
+  }
+
+  @mixin playable-note-alt {
+    background-image: url("../images/content/onescalloped-alt.png");
+    color: #000;
+  }
+
+
+  background-image: none;
+  background-repeat: no-repeat;
+  min-height: 600px;
+  line-height: 50px;
+  color: #000;
+  font-weight: bold;
+  font-size: 32px;
+  width: 120px;
+  display: inline-block;
+
+
+  //D, [Eb], E, [F], Gb, G, Ab, A, [Bb], B, C, Db, D, [Eb], E
+  //62 63    64 65   66  67 68  69  70   71 72 73  74 75    76
+  //#["D", "E", "F#", "G", "Ab", "A", "B", "C", "Db"]
+  &.playable_pitch-62 {
+    @include playable-note;
+    background-position: -20px 65px;
+  }
+  &.playable_pitch-64 {
+    @include playable-note;
+    background-position: -154px 65px;
+  }
+  &.playable_pitch-74 {
+    @include playable-note;
+    background-position: -1232px 65px;
+  }
+  &.playable_pitch-76 {
+    @include playable-note;
+    background-position: -1366px 65px;
+  }
+  &.playable_pitch-66 {
+    @include playable-note;
+    background-position: -289px 65px;
+  }
+  &.playable_pitch-67 {
+    @include playable-note;
+    background-position: -423px 65px;
+  }
+  &.playable_pitch-68 {
+    @include playable-note;
+    background-position: -557px 65px;
+  }
+  &.playable_pitch-69 {
+    @include playable-note;
+    background-position: -691px 65px;
+  }
+  &.playable_pitch-71 {
+    @include playable-note;
+    background-position: -830px 65px;
+  }
+  &.playable_pitch-72 {
+    @include playable-note;
+    background-position: -963px 65px;
+  }
+  &.playable_pitch-73 {
+    @include playable-note;
+    background-position: -1098px 65px;
+  }
+
+  &.playable_pitch-63 {
+    @include playable-note-alt;
+    background-position: -154px 65px;
+  }
+  &.playable_pitch-65 {
+    @include playable-note-alt;
+    background-position: -289px 65px;
+  }
+  &.playable_pitch-70 {
+    @include playable-note-alt;
+    background-position: -830px 65px;
+  }
+  &.playable_pitch-75 {
+    @include playable-note-alt;
+    background-position: -1366px 65px;
+  }
+
+}
+
+.btn {
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 300;
+  color: #212529;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #fff;
+  background-color: #007bff ;
+  border-color: #007bff;
+  border: 1px solid transparent;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  margin: 3px;
+}
+
+.card-body {
+  padding: 15px;
+  text-align: center;
+  .textWrapper {
+    margin-bottom: 15px;
+  }
+}
+
+.YtLiteLoader {
+  margin-top: 60px;
+  margin-bottom: 50px;
+  lite-youtube {
+    margin: 0px auto;
+  }
+}

@@ -1,0 +1,41 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# Mac OS X
+.DS_Store
+._.*
+._*
+
+# Ignore local editor
+.project
+.settings
+.idea
+*.swp
+tags
+nbproject/*
+
+# Windows
+Thumbs.db
+
+npm-debug.log
+
+node_modules/
+dist/
+dist.tar.gz
+
+src/js/abcjs/bin
+src/js/abcjs/build-utils
+src/js/abcjs/deploy-docs.sh
+src/js/abcjs/dist
+src/js/abcjs/*.yml
+src/js/abcjs/docs
+src/js/abcjs/font_generator
+srs/js/abcjs/tests
+src/abc/disabled
+src/abc/dmca-*
+
+
+#script for deployment (contains sensitive info)
+deploy.sh
+
+#still working on this
+src/js/transposer.js

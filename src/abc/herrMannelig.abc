@@ -1,0 +1,13 @@
+%%abc-charset utf-8
+X: 0
+T:Herr Mannelig
+Z:Jack Campin, http://www.campin.me.uk/
+G:old Swedish ballad
+M:4/4
+L:1/8
+Q:1/4=132
+K:EMin transposition=1 fgp=0
+B|BcBA G2 EF|GAGF E2EF|        G2  GG    A2 GA|        B4 G3
+B|BcBA G2 EF|GAGF E2EF|        G4        A>AGA|        B4 G3
+B|BcBA GG EF|GAGF E2EF|        G4        A2 GA|        B4 d2z
+B|BcBA G2 EF|GAGF E2EF|[M:2/4] GA- AG/F/      |[M:4/4] E4 z3|]

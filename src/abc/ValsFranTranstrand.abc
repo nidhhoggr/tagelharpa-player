@@ -1,0 +1,20 @@
+%%abc-charset utf-8
+X: 0
+T: Vals från Transtrand efter Simons Per
+F: https://www.youtube.com/watch?v=h9Du3YAAFVw
+Z: Taken from Karen Myers modified by Joseph Persie
+Q: "BPM=75"
+K:E fgp=1 transpose=0 tuning=0
+M: 2/2
+B=d 
+M: 3/4
+|: =c4 B2 | A2 G2 A2 | GA B2 A2 | GA B=c =dB | =c4 B2 |
+M:7/8
+ABAG2A2 | GB e2 G2 :| 
+M:3/4
+|: A4 B=d | E2 =cB c=d | =c2 B2 A2 |
+z2 =de d=c | B2 =c2 =d2 | e2 e=d =c2 | 
+B=d =cB AG | 
+A=c BE GB | 
+M: 2/2
+A4 E2 :|
