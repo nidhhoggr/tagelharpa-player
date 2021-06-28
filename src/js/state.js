@@ -77,6 +77,8 @@ StateManagement.prototype.onAssessState = function onAssessState({playerInstance
     }
 
     stateArray.push(["drs", isEnabled?.disableRepeatingSegments ? 1 : 0]);
+    stateArray.push(["ddm", isEnabled?.disableDurationalMargings ? 1 : 0]);
+    
     if (isPositiveNumber(errorReloadCount)) {
       const errReload = parseInt(errorReloadCount);
       if (errReload < config.errorReloadLimit) {

@@ -63,6 +63,7 @@ function ABCPlayer({
     scrolling: false,//overflow scroll is disabled by default for HPS
     pageView: false,
     disableRepeatingSegments: false,
+    disableDuationalMargings: false,
   };
 
   //stores how many times the player was reloaded due to an error
@@ -94,6 +95,8 @@ function ABCPlayer({
     "disableFullscreen",
     "enablePageView",
     "disablePageView",
+    "enableDurationalMargins",
+    "disableDurationalMargins",
     "enableRepeatingSegments",
     "disableRepeatingSegments",
     "compatibility",
@@ -127,6 +130,7 @@ function ABCPlayer({
     "imb",//isMobileBuild,
     "pve",//pageViewEnabled
     "drs",//disableRepeatingSegments
+    "ddm",//disableDurationalMargins
   ];
 
   this.clientParams = {};
@@ -278,6 +282,36 @@ ABCPlayer.prototype.disableFullscreen = function enableFullscreen() {
   document.exitFullscreen();
 }
 
+ABCPlayer.prototype.enableDurationalMargins = function enableDurationalMargins() {
+  this.isEnabled.disableDurationalMargins = false;
+  this.domBinding.enableDurationalMargins.hide();
+  this.domBinding.disableDurationalMargins.show("inline-flex");
+  const sections = dQAll(".scrollingNotesWrapper section");
+  sections.forEach(s => {
+    let duration = s.getAttribute("data-duration");
+    if (duration) {
+      duration = parseFloat(duration);
+      const pixels = _.round(duration * 130);
+      s.style["margin-right"] = `${pixels}px`;
+      s.outerHTML = `<div class="pnWrapper">${s.outerHTML}</div>`;
+    }
+  });
+}
+
+ABCPlayer.prototype.disableDurationalMargins = function disableDurationalMargins() {
+  this.isEnabled.disableDurationalMargins = true;
+  this.domBinding.enableDurationalMargins.show("inline-flex");
+  this.domBinding.disableDurationalMargins.hide();
+  const wrappers = dQAll("div.pnWrapper");
+  wrappers.forEach(w => {
+    const s = w.querySelector("section");
+    const duration = s.getAttribute("data-duration");
+    if (duration) {
+      s.style["margin-right"] = `0px`;
+      w.outerHTML = s.outerHTML;
+    }
+  });
+}
 
 ABCPlayer.prototype.createSong = function createSong() {
   dQ("textarea.createSongTextarea").value = this.playerOptions.abcSongEditorDefaultText; 
@@ -344,7 +378,7 @@ ABCPlayer.prototype.onNoteChange = function onNoteChange({event, midiPitch: {
         debugErr(`Could not calculate offset`);
       }
     }
-    const scrollingNoteDivs = this.domBinding?.scrollingNotesWrapper.children || [];
+    const scrollingNoteDivs = dQAll(".scrollingNotesWrapper section") || [];
     const currEl = scrollingNoteDivs[index];
     let i, snd;
     if (currEl && !currEl.className.includes("currentNote")) {
@@ -1203,31 +1237,6 @@ ABCPlayer.prototype.settingTuneFinish = function settingTuneFinish() {
   fadeEffect();
 }
 
-ABCPlayer.prototype.enableDurationalMargins = function enableDurationalMargins() {
-  const sections = dQAll(".scrollingNotesWrapper section");
-  sections.forEach(s => {
-    let duration = s.getAttribute("data-duration");
-    if (duration) {
-      duration = parseFloat(duration);
-      const pixels = _.round(duration * 130);
-      s.style["margin-right"] = `${pixels}px`;
-      s.outerHTML = `<div class="pnWrapper">${s.outerHTML}</div>`;
-    }
-  });
-}
-
-ABCPlayer.prototype.disableDurationalMargins = function disableDurationalMargins() {
-  const wrappers = dQAll("div.pnWrapper");
-  wrappers.forEach(w => {
-    const s = w.querySelector("section");
-    const duration = s.getAttribute("data-duration");
-    if (duration) {
-      s.style["margin-right"] = `0px`;
-      w.outerHTML = s.outerHTML;
-    }
-  });
-}
-
 
 ABCPlayer.prototype.isSettingTune = function isSettingTune() {
   return this.currentTuneIndex && this.isSettingTuneByIndex === this.currentTuneIndex;
@@ -1456,6 +1465,9 @@ function scrollingNoteItemIterator({section, item}) {
   section.setAttribute("data-duration", `${durr}`);
   if (measureStart) section.setAttribute("data-measureStart", "true");
   section.addEventListener("click", this.noteScrollerItemOnClick.bind(this));
+  if (section.parentElement?.classList?.includes("pnWrapper")) {
+    section.parentElement.addEventListener("click", this.noteScrollerItemOnClick.bind(this));
+  }
 }
 
 ABCPlayer.prototype.getNoteScrollerItem = function getNoteScrollerItem({currentNoteIndex} = {}) {
@@ -1468,6 +1480,7 @@ ABCPlayer.prototype.noteScrollerItemOnClick = function noteScrollerItemOnClick(e
     e = {target};
   }
   if (!e) return;
+  e = e.querySelector("section");
   this.assessState({currentNoteIndex});
   const noteTimingIndex = _.get(e, "target.dataset.notetimingindex");
   const percentage = _.get(e, "target.dataset.percentage", 0);

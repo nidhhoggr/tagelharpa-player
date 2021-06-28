@@ -273,6 +273,8 @@ select {
 
     span.enableRepeatingSegments,
     span.disableRepeatingSegments,
+    span.enableDurationalMargins,
+    span.disableDurationalMargins,
     span.enableMobileView,
     span.disableMobileView,
     span.enableFullscreen,
@@ -300,6 +302,13 @@ select {
     }
     span.disableRepeatingSegments {
       background: url("../images/content/player/disableRepeatingSegments.svg") no-repeat;
+    }
+    span.enableDurationalMargins {
+      background: url("../images/content/player/half-note-rest.svg") no-repeat;
+      display: none;
+    }
+    span.disableDurationalMargins {
+      background: url("../images/content/player/quarter-note-rest.svg") no-repeat;
     }
     span.enableMobileView {
       background: url("../images/content/player/mobile.svg") no-repeat;
