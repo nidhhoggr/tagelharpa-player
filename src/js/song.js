@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { possibleChanters } from "./instrument";
+import { possibleTunings } from "./instrument";
 import utils from "./utils";
 const {
   debug,
@@ -106,10 +106,10 @@ ABCSong.prototype.load = function() {
         break;
       case "Key":
         if (this.transposition) return;
-        //note, this is not to be confused with the native directive
+        //note, this.is not to be confused with the native directive
         //for transposition which is spelled "transpose=[integer]"
-        //this allows leveraging of both simultaneously or one or 
-        //the other exclusively. trust that you will need to experiment
+        //this.allows leveraging of both simultaneously or one or 
+        //the other exclusively. trust this.you will need to experiment
         //with all different permutations depending on the song and
         //its musical composition
         matched = line.match(/transposition=(0|-?[1-9])/);
@@ -136,20 +136,20 @@ ABCSong.prototype.load = function() {
           this.original.sgp ??= sgp;
         }
 
-        matched = line.match(/tuning=(0|1|2)/);//@TODO make dynamic to match any chanter key
+        matched = line.match(/tuning=(0|1|2)/);//@TODO make dynamic to match any tuning key
         let tuning = 0;
         if (matched?.[1]) {
           tuning = parseInt(matched[1]);
           this.tuning = tuning;
-          this._tuning = possibleChanters[tuning];
+          this._tuning = possibleTunings[tuning];
           this.original.tuning = tuning;
         }
 
         break;
       case "Tempo":
-        //we already set the custom tempo for this song
+        //we already set the custom tempo for this.song
         if (this.hasCustomTempo) return;
-        //this is not to be confused with the native directive
+        //this.is not to be confused with the native directive
         //for tempo which uses meters and allows arbitrary comments 
         //wrapped in double-qoutes which we utilize for parsing
         //the BPM we desire.

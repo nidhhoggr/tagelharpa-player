@@ -709,7 +709,7 @@ ABCPlayer.prototype.evaluateClientParams = function() {
   if (isNumber(clientParam)) {
     const currentTuningIndex = this.getCurrentTuningIndex();
     const urlTuningIndex = clientParam;
-    debug("URL CHANTER", currentTuningIndex, urlTuningIndex);
+    debug("URL TUNING", currentTuningIndex, urlTuningIndex);
     if (currentTuningIndex !== urlTuningIndex && urlTuningIndex !== 0) {
       toSet.tuningIndex = urlTuningIndex;
       toSet.from_tuningIndex = currentTuningIndex;
