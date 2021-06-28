@@ -293,7 +293,17 @@ ABCPlayer.prototype.enableDurationalMargins = function enableDurationalMargins()
       duration = parseFloat(duration);
       const pixels = _.round(duration * 130);
       s.style["margin-right"] = `${pixels}px`;
-      s.outerHTML = `<div class="pnWrapper">${s.outerHTML}</div>`;
+      s.outerHTML = `<div class="pnWrapper">${s.outerHTML}</div>`
+    }
+    //applying the listener directly after setting the outHTML has no effect hence this conditional block
+    else if(s.className.includes("lastItem ")) {
+      s.outerHTML = `<div class="pnWrapper">${s.outerHTML}</div>`
+      setTimeout(() => {
+        const wrappers = dQAll("div.pnWrapper");
+        wrappers.forEach(w => {
+          w.addEventListener("click", this.noteScrollerItemOnClick.bind(this));
+        })
+      });
     }
   });
 }
@@ -309,6 +319,15 @@ ABCPlayer.prototype.disableDurationalMargins = function disableDurationalMargins
     if (duration) {
       s.style["margin-right"] = `0px`;
       w.outerHTML = s.outerHTML;
+    }
+    //applying the listener directly after setting the outHTML has no effect hence this conditional block
+    else if(s.className.includes("lastItem ")) {
+      setTimeout(() => {
+        const sections = dQAll(".scrollingNotesWrapper section");
+        sections.forEach(s => {
+          s.addEventListener("click", this.noteScrollerItemOnClick.bind(this));
+        })
+      });
     }
   });
 }
@@ -715,8 +734,6 @@ ABCPlayer.prototype.enablePageViewFromClientParam = function() {
     this.isEnabled.pageView = true;
   }
 }
-
-
 
 ABCPlayer.prototype.evaluateClientParams = function() {
 
@@ -1465,9 +1482,6 @@ function scrollingNoteItemIterator({section, item}) {
   section.setAttribute("data-duration", `${durr}`);
   if (measureStart) section.setAttribute("data-measureStart", "true");
   section.addEventListener("click", this.noteScrollerItemOnClick.bind(this));
-  if (section.parentElement?.classList?.includes("pnWrapper")) {
-    section.parentElement.addEventListener("click", this.noteScrollerItemOnClick.bind(this));
-  }
 }
 
 ABCPlayer.prototype.getNoteScrollerItem = function getNoteScrollerItem({currentNoteIndex} = {}) {
@@ -1480,7 +1494,10 @@ ABCPlayer.prototype.noteScrollerItemOnClick = function noteScrollerItemOnClick(e
     e = {target};
   }
   if (!e) return;
-  e = e.querySelector("section");
+  if (e.target.localName !== "section") {
+    e = {target: e.target.querySelector("section")};
+  }
+  if (!e) return;
   this.assessState({currentNoteIndex});
   const noteTimingIndex = _.get(e, "target.dataset.notetimingindex");
   const percentage = _.get(e, "target.dataset.percentage", 0);
