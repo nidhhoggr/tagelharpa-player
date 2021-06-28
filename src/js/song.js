@@ -256,6 +256,7 @@ ABCSong.prototype.insertInformationField = function({line}) {
 ABCSong.prototype.getDistinctNotes = function() {
   if (!this.entireNoteSequence) return;
   return _.uniq(this.entireNoteSequence.map(({noteName}) => {
+    if (!noteName) return;
     const strippedPitchNote = noteName.match(/^[A-Za-z]+/);
     return strippedPitchNote[0];
   }));

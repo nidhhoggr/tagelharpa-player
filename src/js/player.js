@@ -879,19 +879,20 @@ ABCPlayer.prototype.setCurrentSongNoteSequence = function({visualObj, onFinish})
   const totalDuration = _.get(this.midiBuffer, "flattened.totalDuration") * 1000;
   let durationReached = 0;
   if (lines?.length === 0) return onFinish?.(0)
+  const emptyLines = [];
   lines.map((line, lKey) => {
     if (_.get(line, "midiPitches[0].cmd") === "note") {
       const pitchIndex = line.midiPitches[0].pitch;
       const noteName = this.abcjs.synth.pitchToNoteName[pitchIndex];
       const duration = line.midiPitches[0].duration;
-      const percentage = _.round((durationReached * 1000 / totalDuration), 5);
+      //const percentage = _.round((durationReached * 1000 / totalDuration), 5);
       const ensIndex = this.currentSong.entireNoteSequence.push({
         noteName,
         pitchIndex,
         duration,
-        durationReached,
-        _percentage: percentage,
-        percentage: percentage.toString().replace(".","_"),
+        //durationReached,
+        //_percentage: percentage,
+        //percentage: percentage.toString().replace(".","_"),
         measureStart: line.measureStart
       }) - 1;
       this.audioParams.visualObj.noteTimings[lKey].ensIndex = ensIndex;
@@ -900,8 +901,42 @@ ABCPlayer.prototype.setCurrentSongNoteSequence = function({visualObj, onFinish})
       durationReached += duration;
     }
     else {
+      //probably a Z character
+      if (line.type == "event") {
+        const _duration = _.round(line.milliseconds / line.millisecondsPerMeasure, 5);
+        const ensIndex = this.currentSong.entireNoteSequence.push({}) - 1;
+        emptyLines.push({ensIndex, _duration});
+        this.audioParams.visualObj.noteTimings[lKey].ensIndex = ensIndex;
+        this.currentSong.entireNoteSequence[ensIndex].noteTimingIndex = lKey;
+        this.currentSong.entireNoteSequence[ensIndex].ensIndex = ensIndex;
+        //durationReached += duration;
+      }
       if (line.type == "end") {
         onFinish?.(lKey + 1);
+        const durationDifference = totalDuration - (durationReached * 1000);
+        const paddingSegments = _.round((durationDifference / emptyLines.length) / 1000, 5);
+        durationReached = 0;
+        let i, ensItem;
+
+        for (i in this.currentSong.entireNoteSequence) {
+          ensItem = this.currentSong.entireNoteSequence[i];
+          const percentage = _.round((durationReached * 1000) / totalDuration, 5);
+          this.currentSong.entireNoteSequence[i].durationReached = durationReached;
+          this.currentSong.entireNoteSequence[i]._percentage = percentage;
+          this.currentSong.entireNoteSequence[i].percentage = percentage.toString().replace(".","_");
+          if (!ensItem.noteName) {
+            const emptyItem = _.find(emptyLines, ei => ei.ensIndex == i);
+            debug(emptyItem);
+            durationReached += paddingSegments;
+          }
+          else {
+            durationReached += ensItem.duration;
+          }
+          if (i == this.currentSong.entireNoteSequence.length - 1) {
+            debug(durationReached);
+            onFinish?.(lKey + 1);
+          }
+        }
       }
     }
   });
