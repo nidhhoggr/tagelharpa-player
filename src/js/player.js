@@ -900,9 +900,9 @@ ABCPlayer.prototype.setCurrentSongNoteSequence = function({visualObj, onFinish})
       this.currentSong.entireNoteSequence[ensIndex].noteTimingIndex = lKey;
       this.currentSong.entireNoteSequence[ensIndex].ensIndex = ensIndex;
       durationReached += duration;
-    }
+    } else
     */
-    else if (["rest", "note"].includes(cmd)) {
+    if (["rest", "note"].includes(cmd)) {
       const pitchIndex = line.midiPitches[0].pitch;
       const noteName = this.abcjs.synth.pitchToNoteName[pitchIndex];
       const duration = line.duration;
