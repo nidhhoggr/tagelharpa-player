@@ -250,14 +250,27 @@ var Tune = function() {
 			return { isTiedState: undefined, duration: 0 };
 		var realDuration = element.durationClass ? element.durationClass : element.duration;
     const firstPitch = element.abcelem.midiPitches && element.abcelem.midiPitches[0];
-    if (firstPitch && firstPitch.cmd == "note") {
+    if (element.abcelem.type == "tempo" && element.abcelem.duration) {
+      /*
+      realDuration = parseFloat(element.abcelem.duration[0]);
+      element.abcelem.midiPitches = [];
+      element.abcelem.midiPitches[0] = {
+        ensIndexes: [this.currentEnsIndex],
+        cmd: "tempo",
+        duration: realDuration
+      };
+      element.abcelem.duration = realDuration;
+      this.currentEnsIndex++;
+      */
+    }
+    else if (firstPitch && firstPitch.cmd == "note") {
       if (!firstPitch.ensIndexes) element.abcelem.midiPitches[0].ensIndexes = [];
       if (!firstPitch.ensIndexes.includes(this.currentEnsIndex)) {
         element.abcelem.midiPitches[0].ensIndexes.push(this.currentEnsIndex);
         this.currentEnsIndex++;
       }
     }
-    else if (element.abcelem.duration) {
+    else if (element.abcelem.duration > 0) {
       const { rest, gracenotes, duration } = element.abcelem;
       element.abcelem.midiPitches = [];
       element.abcelem.midiPitches[0] = {

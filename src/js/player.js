@@ -161,8 +161,8 @@ function ABCPlayer({
           const firstPitch = _.get(abcElem, "midiPitches[0]");
           if (firstPitch) {
             const currentNoteIndex = _.get(firstPitch, "ensIndexes[0]");
-            if (currentNoteIndex) 
-              this.noteScrollerItemOnClick(undefined, {currentNoteIndex: currentNoteIndex - 1});
+            if (currentNoteIndex >= 0) 
+              this.noteScrollerItemOnClick(undefined, {currentNoteIndex});
               this.assessState({currentNoteIndex});
           }
         }
@@ -287,11 +287,13 @@ ABCPlayer.prototype.enableDurationalMargins = function enableDurationalMargins()
   this.domBinding.enableDurationalMargins.hide();
   this.domBinding.disableDurationalMargins.show("inline-flex");
   const sections = dQAll(".scrollingNotesWrapper section");
+  let totalMarginPixels = 0;
   sections.forEach(s => {
     let duration = s.getAttribute("data-duration");
     if (duration) {
       duration = parseFloat(duration);
       const pixels = _.round(duration * 130);
+      totalMarginPixels += pixels;
       s.style["margin-right"] = `${pixels}px`;
       s.outerHTML = `<div class="pnWrapper">${s.outerHTML}</div>`
     }
@@ -299,6 +301,9 @@ ABCPlayer.prototype.enableDurationalMargins = function enableDurationalMargins()
     else if(s.className.includes("lastItem ")) {
       s.outerHTML = `<div class="pnWrapper">${s.outerHTML}</div>`
       setTimeout(() => {
+        let scrollerCurrentWidth = parseInt(this.domBinding?.scrollingNotesWrapper.style.width, 10);
+        scrollerCurrentWidth = parseInt(scrollerCurrentWidth + totalMarginPixels);
+        this.domBinding.scrollingNotesWrapper.style.width = `${scrollerCurrentWidth}px`;
         const wrappers = dQAll("div.pnWrapper");
         wrappers.forEach(w => {
           w.addEventListener("click", this.noteScrollerItemOnClick.bind(this));
@@ -795,7 +800,7 @@ ABCPlayer.prototype.evaluateClientParams = function() {
   if (isNumber(clientParam)) {
     const currentNoteIndex = clientParam;
     if (isNumber(currentNoteIndex)) {
-      toSet["setNoteScrollerItem"] = currentNoteIndex - 1;
+      toSet["setNoteScrollerItem"] = currentNoteIndex;
     }
   }
 
@@ -879,9 +884,25 @@ ABCPlayer.prototype.setCurrentSongNoteSequence = function({visualObj, onFinish})
   const totalDuration = _.get(this.midiBuffer, "flattened.totalDuration") * 1000;
   let durationReached = 0;
   if (lines?.length === 0) return onFinish?.(0)
-  const emptyLines = [];
   lines.map((line, lKey) => {
-    if (["rest", "gracenotes", "note"].includes(_.get(line, "midiPitches[0].cmd"))) {
+    const cmd = _.get(line, "midiPitches[0].cmd");
+    /*
+    if (cmd == "tempo") {
+      const duration = line.duration;
+      const percentage = _.round((durationReached * 1000 / totalDuration), 5);
+      const ensIndex = this.currentSong.entireNoteSequence.push({
+        duration,
+        durationReached,
+        _percentage: percentage,
+        percentage: percentage.toString().replace(".","_"),
+      }) - 1;
+      this.audioParams.visualObj.noteTimings[lKey].ensIndex = ensIndex;
+      this.currentSong.entireNoteSequence[ensIndex].noteTimingIndex = lKey;
+      this.currentSong.entireNoteSequence[ensIndex].ensIndex = ensIndex;
+      durationReached += duration;
+    }
+    */
+    else if (["rest", "note"].includes(cmd)) {
       const pitchIndex = line.midiPitches[0].pitch;
       const noteName = this.abcjs.synth.pitchToNoteName[pitchIndex];
       const duration = line.duration;
@@ -944,7 +965,7 @@ ABCPlayer.prototype.stop = function(args = {}) {
       skipUpdate: true,
     });
     this.transposition = 0;
-    this.currentNoteIndex = (this.isEnabled.pageView) ? 0 : 1;
+    this.currentNoteIndex = 0;
   }
   if (this.playerOptions.refreshWhenPossible) {
     this.updateState({
@@ -1247,11 +1268,6 @@ ABCPlayer.prototype.settingTuneStart = function settingTuneStart(tuneIndex) {
 ABCPlayer.prototype.settingTuneFinish = function settingTuneFinish() {
   this.isSettingTuneByIndex = undefined;
   this.enableDurationalMargins();
-  /**TODO use as a toggle
-    setTimeout(() => {
-      this.disableDurationalMargins();
-    }, 10000);
-  */
   fadeEffect();
 }
 
@@ -1452,6 +1468,7 @@ function scrollingNoteItemIterator({section, item}) {
     percentage, 
     measureStart 
   } = item;
+  if (!pitchIndex) return;
   const dur = _.ceil(duration * 100);
   const durr = _.ceil(duration, 4);
   if (((pitchIndex < _.get(this.currentSong, "compatibility.pitchReached.min") && pitchIndex < this.instrument.getLowestPlayablePitch()) || 

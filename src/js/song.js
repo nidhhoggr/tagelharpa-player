@@ -255,19 +255,20 @@ ABCSong.prototype.insertInformationField = function({line}) {
 //@TODO MEmoize as an instance of currentSong
 ABCSong.prototype.getDistinctNotes = function() {
   if (!this.entireNoteSequence) return;
-  return _.uniq(this.entireNoteSequence.map(({noteName}) => {
+  return _.reject(_.uniq(this.entireNoteSequence.map(({noteName}) => {
     if (!noteName) return;
     const strippedPitchNote = noteName.match(/^[A-Za-z]+/);
     return strippedPitchNote[0];
-  }));
+  })), _.isUndefined);
 }
 
 //@TODO MEmoize as an instance of currentSong
 ABCSong.prototype.getDistinctPitches = function() {
   if (!this.entireNoteSequence) return;
-  return _.uniq(this.entireNoteSequence.map(({pitchIndex}) => {
+  return _.reject(_.uniq(this.entireNoteSequence.map(({pitchIndex}) => {
+    if (!pitchIndex) return;
     return pitchIndex
-  }));
+  })), _.isUndefined);
 }
 
 ABCSong.prototype.getInformationByFieldName = function({fieldName, flatten = true}) {
