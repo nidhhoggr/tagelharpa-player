@@ -250,12 +250,35 @@ var Tune = function() {
 			return { isTiedState: undefined, duration: 0 };
 		var realDuration = element.durationClass ? element.durationClass : element.duration;
     const firstPitch = element.abcelem.midiPitches && element.abcelem.midiPitches[0];
-    if (firstPitch && firstPitch.cmd == "note") {
+    if (element.abcelem.type == "tempo" && element.abcelem.duration) {
+      /*
+      realDuration = parseFloat(element.abcelem.duration[0]);
+      element.abcelem.midiPitches = [];
+      element.abcelem.midiPitches[0] = {
+        ensIndexes: [this.currentEnsIndex],
+        cmd: "tempo",
+        duration: realDuration
+      };
+      element.abcelem.duration = realDuration;
+      this.currentEnsIndex++;
+      */
+    }
+    else if (firstPitch && firstPitch.cmd == "note") {
       if (!firstPitch.ensIndexes) element.abcelem.midiPitches[0].ensIndexes = [];
-      if (!firstPitch.ensIndexes.includes(this.currentEnsIndex + 1)) {
-        element.abcelem.midiPitches[0].ensIndexes.push(this.currentEnsIndex + 1);
+      if (!firstPitch.ensIndexes.includes(this.currentEnsIndex)) {
+        element.abcelem.midiPitches[0].ensIndexes.push(this.currentEnsIndex);
         this.currentEnsIndex++;
       }
+    }
+    else if (element.abcelem.duration > 0) {
+      const { rest, gracenotes, duration } = element.abcelem;
+      element.abcelem.midiPitches = [];
+      element.abcelem.midiPitches[0] = {
+        ensIndexes: [this.currentEnsIndex],
+        cmd: rest ? "rest" : gracenotes ? "gracenotes" : "note",
+        duration,
+      }
+      this.currentEnsIndex++;
     }
 		if (element.abcelem.rest && element.abcelem.rest.type === "spacer")
 			realDuration = 0;
@@ -296,6 +319,7 @@ var Tune = function() {
 				// the last note wasn't tied.
 				if (!eventHash["event" + voiceTimeMilliseconds]) {
 					eventHash["event" + voiceTimeMilliseconds] = {
+            duration: element.abcelem.duration,
 						type: "event",
 						milliseconds: voiceTimeMilliseconds,
 						line: line,
