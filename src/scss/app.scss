@@ -402,12 +402,27 @@ select {
   }
 
   .noteDiagram {
+    background: $foreground-color url('../images/content/verticalFretboard.png') center top no-repeat;
     text-align: left;
     background-color: #fff1eb;
     padding: 15px;
+    height: 600px;
     h1 {
       text-align: center;
       font-size: 64px;
+      position: relative;
+      top: 490px;
+    }
+
+    & > div:before {
+      content: ' \25CF';
+      font-size: 50px;
+      position: relative;
+      top: -50px;
+      left: 26px;   //1st string
+      //left: 0px;  //2nd string
+      //left: -30px;//3rd string
+      color: #1b61e4
     }
   }
 }
@@ -456,18 +471,8 @@ span.keySigUp {
   }
 }
 
-.playable_tuning-gCG {
-  @mixin playable-note {
-    background-image: url("../images/content/onescalloped.png");
-    color: #000;
-  }
-
-  @mixin playable-note-alt {
-    background-image: url("../images/content/onescalloped-alt.png");
-    color: #000;
-  }
-
-
+.playable_tuning-gcg {
+  
   background-image: none;
   background-repeat: no-repeat;
   min-height: 600px;
@@ -479,71 +484,113 @@ span.keySigUp {
   display: inline-block;
 
 
-  //D, [Eb], E, [F], Gb, G, Ab, A, [Bb], B, C, Db, D, [Eb], E
-  //62 63    64 65   66  67 68  69  70   71 72 73  74 75    76
-  //#["D", "E", "F#", "G", "Ab", "A", "B", "C", "Db"]
-  &.playable_pitch-62 {
-    @include playable-note;
-    background-position: -20px 65px;
+  &.unplayable-note:before {
+    display: none;
   }
-  &.playable_pitch-64 {
-    @include playable-note;
-    background-position: -154px 65px;
+  // 0 |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 |
+  // 55   56    57    58    59    60↩
+  // 60   61    62    63    64    65    66    67↩
+  // 67   68    69    70    71    72    73    74    75    76    77    78    79
+  &.playable_pitch-55:before {
+    left: 71px !important;
+    top: -40px !important;
   }
-  &.playable_pitch-74 {
-    @include playable-note;
-    background-position: -1232px 65px;
+  &.playable_pitch-56:before {
+    left: 71px !important;
+    top: 0px !important;
   }
-  &.playable_pitch-76 {
-    @include playable-note;
-    background-position: -1366px 65px;
+  &.playable_pitch-57:before {
+    left: 71px !important;
+    top: 52px !important;
   }
-  &.playable_pitch-66 {
-    @include playable-note;
-    background-position: -289px 65px;
+  &.playable_pitch-58:before {
+    left: 71px !important;
+    top: 104px !important;
   }
-  &.playable_pitch-67 {
-    @include playable-note;
-    background-position: -423px 65px;
+  &.playable_pitch-59:before {
+    left: 71px !important;
+    top: 150px !important;
   }
-  &.playable_pitch-68 {
-    @include playable-note;
-    background-position: -557px 65px;
+  &.playable_pitch-60:before {
+    left: 71px !important;
+    top: 195px !important;
   }
-  &.playable_pitch-69 {
-    @include playable-note;
-    background-position: -691px 65px;
+  &.playable_pitch-61:before {
+    left: 44px !important;
+    top: 0px !important;
   }
-  &.playable_pitch-71 {
-    @include playable-note;
-    background-position: -830px 65px;
+  &.playable_pitch-62:before {
+    left: 44px !important;
+    top: 52px !important;
   }
-  &.playable_pitch-72 {
-    @include playable-note;
-    background-position: -963px 65px;
+  &.playable_pitch-63:before {
+    left: 44px !important;
+    top: 104px !important;
   }
-  &.playable_pitch-73 {
-    @include playable-note;
-    background-position: -1098px 65px;
+  &.playable_pitch-64:before {
+    left: 44px !important;
+    top: 150px !important;
   }
-
-  &.playable_pitch-63 {
-    @include playable-note-alt;
-    background-position: -154px 65px;
+  &.playable_pitch-65:before {
+    left: 44px !important;
+    top: 195px !important;
   }
-  &.playable_pitch-65 {
-    @include playable-note-alt;
-    background-position: -289px 65px;
+  &.playable_pitch-66:before {
+    left: 44px !important;
+    top: 240px !important;
   }
-  &.playable_pitch-70 {
-    @include playable-note-alt;
-    background-position: -830px 65px;
+  &.playable_pitch-67:before {
+    left: 44px !important;
+    top: 280px !important;
   }
-  &.playable_pitch-75 {
-    @include playable-note-alt;
-    background-position: -1366px 65px;
+  &.playable_pitch-68:before {
+    left: 17px !important;
+    top: 0px !important;
   }
-
+  &.playable_pitch-69:before {
+    left: 17px !important;
+    top: 52px !important;
+  }
+  &.playable_pitch-70:before {
+    left: 17px !important;
+    top: 104px !important;
+  }
+  &.playable_pitch-71:before {
+    left: 17px !important;
+    top: 150px !important;
+  }
+  &.playable_pitch-72:before {
+    left: 17px !important;
+    top: 195px !important;
+  }
+  &.playable_pitch-73:before {
+    left: 17px !important;
+    top: 239px !important;
+  }
+  &.playable_pitch-74:before {
+    left: 17px !important;
+    top: 279px !important;
+  }
+  &.playable_pitch-75:before {
+    left: 17px !important;
+    top: 319px !important;
+  }
+  &.playable_pitch-76:before {
+    left: 17px !important;
+    top: 357px !important;
+  }
+  &.playable_pitch-77:before {
+    left: 17px !important;
+    top: 395px !important;
+  }
+  &.playable_pitch-78:before {
+    left: 17px !important;
+    top: 432px !important;
+  }
+  &.playable_pitch-79:before {
+    left: 17px !important;
+    top: 470px !important;
+  }
 }
 
 .btn {

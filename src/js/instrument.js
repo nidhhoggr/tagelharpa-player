@@ -51,7 +51,7 @@ Instrument.prototype.getPlayableNotes = function getPlayableNotes({tuningKey, no
             // 0 |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 | 
             // 55   56    57    58    59    60↩ 
             // 60   61    62    63    64    65    66    67↩
-            // 68   69    70    71    72    73    74    75    76    77    78    79    80
+            // 67   68    69    70    71    72    73    74    75    76    77    78    79
 
       notes = {
         "G": [55,67,79],
@@ -67,10 +67,6 @@ Instrument.prototype.getPlayableNotes = function getPlayableNotes({tuningKey, no
         "F": [65,77],
         "Gb": [66,78]
       };
-      //E/A Chromaticism reached with the addition of Eb (63), F (65), Bb(70), and Eb (76)
-      //D, [Eb], E, [F], Gb, G, Ab, A, [Bb], B, C, Db, D, [Eb], E
-      //62 63    64 65   66  67 68  69  70   71 72 73  74 75    76
-      //notes = ["D", "E", "Gb", "G", "Ab", "A", "B", "C", "Db"];
       break;
     }
   }

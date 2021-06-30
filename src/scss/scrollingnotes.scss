@@ -202,7 +202,7 @@ main.mobile {
   // 0 |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 |
   // 55   56    57    58    59    60↩
   // 60   61    62    63    64    65    66    67↩
-  // 68   69    70    71    72    73    74    75    76    77    78    79    80
+  // 67   68    69    70    71    72    73    74    75    76    77    78    79
   .playable_pitch-55 {
     @include playable-note;
     background-position: 0px 0px;
@@ -302,9 +302,5 @@ main.mobile {
   .playable_pitch-79 {
     @include playable-note;
     background-position: -1302px 0px;
-  }
-  .playable_pitch-80 {
-    @include playable-note;
-    background-position: -410px 0px;
   }
 }
