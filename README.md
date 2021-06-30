@@ -1,4 +1,4 @@
-# Sackpipa Player
+# Tagelharpa Player
 
 ## Features
 
@@ -45,21 +45,10 @@ Q: "BPM=100"
 ```
 K: Amin transpose=1
 ```
-
-### Plugging Chanter Scallops
-
-* Currently with the a/E and g/D chanters there is the ability to plug not only the first scallop fgp=1 (a/E and g/D) but also the second sgp=1 (g/D only)
-
-```
-K: Amin transpose=0 fgp=1
-```
-
-### Setting the chanter tuning
+### Setting the instrument tuning
 
 * You can specify an interger value for tuning.
-- `0` E/A
-- `1` D/G
-- `2` C/F
+- `0` gCG
 
 ```
 K: Amin tuning=1
