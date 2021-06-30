@@ -16,12 +16,10 @@
     "gen-bundle": "gen-bundle -dir dist -baseURL https://www.folktabs.com/ -primaryURL https://www.folktabs.com/ -o folktabs.wbn"
   },
   "keywords": [
-    "sackpipa",
-    "säckpipa",
-    "dråmba",
-    "koppe",
-    "posu",
-    "bälgpipa"
+    "tagelharpa",
+    "talharpa",
+    "stråkharpa",
+    "jouhikko"
   ],
   "author": "Joseph Persie",
   "license": "MIT",
