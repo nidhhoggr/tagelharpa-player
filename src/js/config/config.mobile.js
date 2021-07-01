@@ -4,7 +4,7 @@ const config = {
   ..._base,
   shouldDebug: false,
   debugDisabledModules: ["state"],//disable debugging in these modules
-  prodDomain: "mobile.folktabs.com",
+  prodDomain: "mobile.tagelharpa.folktabs.com",
   isMobileBuild: true,
   environment: "mobile",
 }
