@@ -106,10 +106,10 @@ ABCSong.prototype.load = function() {
         break;
       case "Key":
         if (this.transposition) return;
-        //note, this.is not to be confused with the native directive
+        //note, this is not to be confused with the native directive
         //for transposition which is spelled "transpose=[integer]"
-        //this.allows leveraging of both simultaneously or one or 
-        //the other exclusively. trust this.you will need to experiment
+        //this allows leveraging of both simultaneously or one or 
+        //the other exclusively. trust that you will need to experiment
         //with all different permutations depending on the song and
         //its musical composition
         matched = line.match(/transposition=(0|-?[1-9])/);
@@ -147,9 +147,9 @@ ABCSong.prototype.load = function() {
 
         break;
       case "Tempo":
-        //we already set the custom tempo for this.song
+        //we already set the custom tempo for this song
         if (this.hasCustomTempo) return;
-        //this.is not to be confused with the native directive
+        //this is not to be confused with the native directive
         //for tempo which uses meters and allows arbitrary comments 
         //wrapped in double-qoutes which we utilize for parsing
         //the BPM we desire.

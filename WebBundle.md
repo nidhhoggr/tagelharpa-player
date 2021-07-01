@@ -1,7 +1,7 @@
 Download The WebBundle
 ---------------------
 
-[folktabs.wbn](https://github.com/nidhhoggr/sackpipa-player/releases/download/1.0.0/folktabs.wbn)
+[folktabs.wbn](https://github.com/nidhhoggr/tagelharpa-player/releases/download/1.0.0/folktabs.wbn)
 
 Browser compatibility
 ---------------------
