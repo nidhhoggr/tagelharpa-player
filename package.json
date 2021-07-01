@@ -1,7 +1,7 @@
 {
   "name": "@nidhhoggr/TagelharpaPlayer",
   "version": "1.0.0",
-  "description": "A player to load abc files and build and runtime into a tagelharpa player",
+  "description": "An abc player that will load abc files and play a song complete with music notations and Tagelharpa diagrams.",
   "scripts": {
     "build": "webpack --mode=development",
     "watch": "webpack --mode=development --watch",
@@ -13,7 +13,7 @@
     "lint-sass": "sass-lint -v -q --format=compact",
     "lint-js": "eslint --ext .js src/js/",
     "uml": "madge --exclude '^abcjs|(scss/base)|(scss/dirty)' --image graph.svg src/js/app.js",
-    "gen-bundle": "gen-bundle -dir dist -baseURL https://www.folktabs.com/ -primaryURL https://www.folktabs.com/ -o folktabs.wbn"
+    "gen-bundle": "gen-bundle -dir dist -baseURL https://tagelharpa.folktabs.com/ -primaryURL https://tagelharpa.folktabs.com/ -o folktabs.wbn"
   },
   "keywords": [
     "tagelharpa",
