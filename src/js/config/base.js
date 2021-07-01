@@ -53,8 +53,8 @@ Z: Transcriber
 M:3/4
 L:1/8
 Q: "BPM=100"
-K: Am fgp=1 transpose=0 tuning=0
-G, _A, =A, _B, =B, C _D =D _E =E F _G =G _A =A _B =B c _d =d _e =e f _g =g 
+K: Am transpose=0 tuning=0
+G, _A, =A, _B, =B, C _D =D _E =E F _G =G _A =A _B =B c _d =d _e =e f _g =g`
 };
 
 export const instrument = {
