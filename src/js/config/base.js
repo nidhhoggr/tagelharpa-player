@@ -8,7 +8,7 @@ export const _base = {
 }
 
 export const player = {
-  currentInstrumentIndex: 109,
+  currentInstrumentIndex: 41,//41 = viola, 42 = cello
   refreshWhenPossible: false,
   getSoundFontUrl: (config) =>  window.location.hostname.includes(config.prodDomain) ? `https://${config.prodDomain}/${config.soundFontDir}` : `http://localhost:3000/${config.soundFontDir}`,
   keyCodes: {
@@ -60,11 +60,7 @@ G, _A, =A, _B, =B, C _D =D _E =E F _G =G _A =A _B =B c _d =d _e =e f _g =g`
 export const instrument = {
   tuningKey: "gCG",
   playableExtraNotes: {
-    0: {//for the E/A tuning
-      "Db": [63, 75],
-      "F": 65,
-      "Bb": [70]
-    },
+    0: {}
   }
 }
 
