@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import abcTransposer from "abc-transposer";
 import "../scss/app.scss";
 import abcjs from "./abcjs";
 import "./abcjs/abcjs-audio.css";
@@ -27,7 +28,8 @@ const songs = new ABCSongs({
   }
 });
 const abcPlayer = new ABCPlayer({
-  abcjs, 
+  abcjs,
+  abcTransposer,
   songs,
   ioc: {//classes that need instantation (inversion of control)
     Instrument, 

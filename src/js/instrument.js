@@ -6,7 +6,6 @@ export const possibleTunings = ["gCG"];
 function Instrument({
   tuningKeyIndex = 0,//the key of the tuning 
   playableExtraNotes = {},//an array of playable notes because some instruments can play more notes,
-  dronesEnabled = [],//an array of notes for the drones enabled, uses ABC for pitches
   pitchToNoteName,//utility function to do what it says
 }) {
   this.possibleTunings = possibleTunings;
