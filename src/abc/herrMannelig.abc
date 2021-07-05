@@ -2,12 +2,13 @@
 X: 0
 T:Herr Mannelig
 Z:Jack Campin, http://www.campin.me.uk/
+Z: Joseph Persie, tune the drone to Eb for the e/a chanter
 G:old Swedish ballad
 M:4/4
 L:1/8
-Q:1/4=132
-K:EMin transposition=1 fgp=0
-B|BcBA G2 EF|GAGF E2EF|        G2  GG    A2 GA|        B4 G3
-B|BcBA G2 EF|GAGF E2EF|        G4        A>AGA|        B4 G3
-B|BcBA GG EF|GAGF E2EF|        G4        A2 GA|        B4 d2z
-B|BcBA G2 EF|GAGF E2EF|[M:2/4] GA- AG/F/      |[M:4/4] E4 z3|]
+Q: 80
+K:A fgp=0
+c|cdcB A2 FG|ABAG F2FG|        A2  AA    B2 AB|        c4 A3
+c|cdcB A2 FG|ABAG F2FG|        A4        B>BAB|        c4 A3
+c|cdcB AA FG|ABAG F2FG|        A4        B2 AB|        c4 e2z
+c|cdcB A2 FG|ABAG F2FG|[M:2/4] AB- BA/G/      |[M:4/4] F4 z3|]
