@@ -15,6 +15,7 @@ Object.keys(tuneBook).forEach(function (key) {
 });
 
 abcjs.renderAbc = require('./src/api/abc_tunebook_svg');
+abcjs.renderAbcHeadless = (output, abc, params) => tuneBook.renderEngine(() => {}, output, abc, params); 
 abcjs.TimingCallbacks = require('./src/api/abc_timing_callbacks');
 
 var glyphs = require('./src/write/abc_glyphs');

@@ -602,7 +602,7 @@ var TuneBuilder = function(tune) {
 
 		// Clone the object because it will be sticking around for the next line and we don't want the extra fields in it.
 		var hashParams = parseCommon.clone(hashParams2);
-
+    if (!tune.lines[tune.lineNum]) return;
 		if (tune.lines[tune.lineNum].staff) { // be sure that we are on a music type line before doing the following.
 			// If tune is the first item in tune staff, then we might have to initialize the staff, first.
 			if (tune.lines[tune.lineNum].staff.length <= tune.staffNum) {
@@ -850,6 +850,8 @@ var TuneBuilder = function(tune) {
 		var currLine = tune.lines[tune.lineNum];
 		if (!currLine)
 			return null;
+    if (!currLine.staff)
+      return null;
 		var currStaff = currLine.staff[tune.staffNum];
 		if (!currStaff)
 			return null;

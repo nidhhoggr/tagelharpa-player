@@ -251,17 +251,7 @@ var Tune = function() {
 		var realDuration = element.durationClass ? element.durationClass : element.duration;
     const firstPitch = element.abcelem.midiPitches && element.abcelem.midiPitches[0];
     if (element.abcelem.type == "tempo" && element.abcelem.duration) {
-      /*
-      realDuration = parseFloat(element.abcelem.duration[0]);
-      element.abcelem.midiPitches = [];
-      element.abcelem.midiPitches[0] = {
-        ensIndexes: [this.currentEnsIndex],
-        cmd: "tempo",
-        duration: realDuration
-      };
-      element.abcelem.duration = realDuration;
-      this.currentEnsIndex++;
-      */
+    
     }
     else if (firstPitch && firstPitch.cmd == "note") {
       if (!firstPitch.ensIndexes) element.abcelem.midiPitches[0].ensIndexes = [];
@@ -320,7 +310,7 @@ var Tune = function() {
 				if (!eventHash["event" + voiceTimeMilliseconds]) {
 					eventHash["event" + voiceTimeMilliseconds] = {
             duration: element.abcelem.duration,
-						type: "event",
+					  type: "event",
 						milliseconds: voiceTimeMilliseconds,
 						line: line,
 						measureNumber: measureNumber,
@@ -514,7 +504,7 @@ var Tune = function() {
 
 	this.setTiming = function (bpm, measuresOfDelay) {
 		measuresOfDelay = measuresOfDelay || 0;
-		if (!this.engraver || !this.engraver.staffgroups) {
+    if (!this.engraver || !this.engraver.staffgroups) {
 			console.log("setTiming cannot be called before the tune is drawn.");
 			this.noteTimings = [];
 			return;
