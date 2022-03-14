@@ -102,7 +102,12 @@ ABCSong.prototype.load = function() {
         this.media ??= line.substring(2);
         break;
       case "Tune Title":
-        this.name ??= line.substring(2);
+        if (this.name) {
+          this.name = this.name + " " + line.substring(2);
+        }
+        else {
+          this.name = line.substring(2);
+        }
         break;
       case "Key":
         if (this.transposition) return;
