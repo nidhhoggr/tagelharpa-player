@@ -395,7 +395,6 @@ select {
   justify-content: space-evenly;
 
   .playercontainer {
-    background-color: #ebefff;
     min-height: 600px;
     min-width: 75%;
     padding: 15px;
@@ -404,7 +403,6 @@ select {
   .noteDiagram {
     background: $foreground-color url('../images/content/verticalFretboard.png') center top no-repeat;
     text-align: left;
-    background-color: #fff1eb;
     padding: 15px;
     height: 600px;
     h1 {
