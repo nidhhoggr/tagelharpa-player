@@ -511,7 +511,14 @@ ABCPlayer.prototype.load = function() {
       try {
         clickBinder({
           el: this.domBinding[elName], 
-          eventCb: this[elName].bind(this)
+          eventCb: (e) => {
+            if (this.haltSetTuneEnabled && this.tuneSetCalled > 0) {
+              this.setTuneCheckerFilo = [];
+              this.tuneSetCalled = 0;
+              this.shouldHaltSetTune = false;
+            }
+            return this[elName].bind(this)(e);
+          }
         });
       } 
       catch(err) {
@@ -678,22 +685,40 @@ ABCPlayer.prototype.load = function() {
         this.enableFullscreen();
       }
     };
-
+    
     if (this.haltSetTuneEnabled) {
+      this.setTuneCheckerFilo = [];
+      const resetHaltTuneInterval = 1000;
+      const resetHaltTuneChecks = () => {
+        this.shouldHaltSetTune = true;
+        setTimeout(() => {
+          debug("CHECKING SETTUNE","CALLING HALT", this.tuneSetCalled);
+          this.tuneSetCalled = 0;
+          this.shouldHaltSetTune = false;
+        }, resetHaltTuneInterval);
+      }
       setInterval(() => {
         debug("CHECKING SETTUNE", this.tuneSetCalled);
-        if (this.tuneSetCalled > 5) {
-          this.shouldHaltSetTune = true; 
-          setTimeout(() => {
-            debug("CHECKING SETTUNE","CALLING HALT");
-            this.tuneSetCalled = 0;
-            this.shouldHaltSetTune = false;
-          }, 3000);
+        if (this.tuneSetCalled > 10) {
+          resetHaltTuneChecks();
+        }
+        else if (this.tuneSetCalled > 0) {
+          this.setTuneCheckerFilo.push(this.tuneSetCalled);
+          if (this.setTuneCheckerFilo.length == 3) {
+            if(_.uniq(this.setTuneCheckerFilo).length == 1) {
+              debug("FILO REACHED", this.setTuneCheckerFilo);
+              this.setTuneCheckerFilo = [];
+              resetHaltTuneChecks();
+            }
+            else {
+              this.setTuneCheckerFilo.shift();
+            }
+          }
         }
         else {
           this.shouldHaltSetTune = false;
         }
-      }, 2000);
+      }, resetHaltTuneInterval);
     }
 
     resolve({player: this});
