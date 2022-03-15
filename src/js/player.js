@@ -132,6 +132,7 @@ function ABCPlayer({
     "pve",//pageViewEnabled
     "drs",//disableRepeatingSegments
     "ddm",//disableDurationalMargins
+    "fn",//filename
   ];
 
   this.clientParams = {};
@@ -552,8 +553,7 @@ ABCPlayer.prototype.load = function() {
     
     this.instrument = new this.ioc.Instrument(this.instrumentOptions);
     this.noteScroller = new this.ioc.HPS(this.hpsOptions.wrapperName, this.hpsOptions);
-    this.songs.setPlayerInstance(this);
-    //@TODO ensure this is not needed here
+    this.songs.load({playerInstance: this});
     this.setCurrentSongFromClientParam();
 
     const _handleErr = (err) => {
@@ -761,7 +761,20 @@ ABCPlayer.prototype.setCurrentSongFromClientParam = function() {
   this.disableRepeatingSegmentsFromClientParam();
   this.disableDurationalMarginsFromClientParam();
   const clientParam = parseInt(this.clientParams["cti"]);
-  if (isNumber(clientParam)) {
+  if (this.clientParams["fn"]) {
+    const filename = this.clientParams["fn"];
+    fetch(`https://s3.amazonaws.com/compatibility.folktabs.com/abc/folkwiki/${filename}.abc`)
+      .then(data => data.text())
+      .then(data => {
+        if (data) {
+          debug("FETCH RESULT", data);
+          this.filename = filename;
+          debug("ADD SONG FROM", filename);
+          this.songs.addSong({filename, song: data, changeSong: true});
+        }
+      });
+  }
+  else if (isNumber(clientParam)) {
     this.currentTuneIndex = clientParam;
     let song = this.songs.loadSong({songIndex: this.currentTuneIndex});
     if (song) {

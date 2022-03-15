@@ -63,30 +63,23 @@ function ABCSongs({ioc}) {
   this.loaded = [];
   //stores an array of songs that were added at runtime
   this.runtimeSongs = [];
+  this.filenameToIndexMap = {};//stores an map of the index to the filename for preventing duplicately added songs
   //must provide set and get methods
   this.storage = new ioc.Storage({namespace: "abcSongs"});
 }
   
-ABCSongs.prototype.load = function load({playerInstance, songIndex}) {
+ABCSongs.prototype.load = function load({playerInstance}) {
   this.playerInstance = playerInstance;
   const stored = this.storage.get();
   if (stored) {
     stored.map(({filename, song}) => {
       debug(`Loading ${filename} from storage`);
-      this.addSong({song});
+      this.addSong({filename, song});
     });
-    if (songIndex) {
-      this.playerInstance.currentTuneIndex = songIndex;
-      this.playerInstance.changeSong({currentTuneIndex: songIndex});
-    }
   }
 }
 
 export default ABCSongs;
-
-ABCSongs.prototype.setPlayerInstance = function(playerInstance) {
-  this.playerInstance = playerInstance;
-}
 
 ABCSongs.prototype.loadSong = function({songIndex}) {
   let song;
@@ -111,13 +104,26 @@ ABCSongs.prototype.loadSong = function({songIndex}) {
   }
 }
 
-ABCSongs.prototype.addSong = function({song, changeSong}) {
+ABCSongs.prototype.addSong = function({filename, song, changeSong}) {
+  if(filename && this.filenameToIndexMap[filename]) {
+    const index = this.filenameToIndexMap[filename];
+    const loaded = this.loadSong({songIndex: index});
+    if (changeSong) {
+      this.playerInstance.currentTuneIndex = index;
+      this.playerInstance.changeSong({currentTuneIndex: index});
+    }
+    return {
+      index,
+      loaded,
+    }
+  }
   let index = this.abcSongs.push(song);
   index = index - 1;
   const loaded = this.loadSong({songIndex: index});
   const title = getInfoField(this.abcSongs[index], "T");
-  const filename = `${_.snakeCase(title)}-${index}`;
+  if (!filename) filename = `${_.snakeCase(title)}-${index}`;
   this.abcFiles[index] = filename;
+  this.filenameToIndexMap[filename] = index;
   this.runtimeSongs.push({filename, song});
   this.storage.set(this.runtimeSongs);
   const selector = this.playerInstance.domBinding.currentSong;
