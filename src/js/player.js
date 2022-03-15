@@ -593,8 +593,8 @@ ABCPlayer.prototype.load = function() {
     const onSuccesses = [];
     
     if (!shouldEnablePageView && this.options.isMobileBuild) {
-      this.playerOptions.showSheetMusic = false;
-      this.playerOptions.showNoteDiagram = false;
+      //this.playerOptions.showSheetMusic = false;
+      //this.playerOptions.showNoteDiagram = false;
       this.stateMgr.activityQueue.push(() => {
         //fires when an activity is detected
         debug("First Activity");
@@ -607,8 +607,8 @@ ABCPlayer.prototype.load = function() {
       });
     }
     else if(shouldEnablePageView) {
-      this.playerOptions.showSheetMusic = false;
-      this.playerOptions.showNoteDiagram = false;
+      //this.playerOptions.showSheetMusic = false;
+      //this.playerOptions.showNoteDiagram = false;
     }
 
     if(!this.playerOptions.showSheetMusic) {
